@@ -9,6 +9,7 @@ function draw(){
 	var painting = false;
 	var lineThickness = 1;
 
+
 	$("#myCanvas").mousedown(function(e){
 		painting = true;
 		context.beginPath();	

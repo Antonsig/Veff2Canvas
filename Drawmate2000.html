@@ -5,29 +5,31 @@
 	<title>DrawMate2000</title>
 </HEAD>
 <BODY>
-<ul>
-<li>
-<button onClick="shape('pencil')";>Pensill</button>
-</li>
-<li>
-<button onClick="shape('line')";>Lína</button>
-</li>
-<li>
-<button onClick="shape('square');">Ferhyrningur</button>
-</li>
-<li>
-<button onClick="shape('circle');">Hringur</button>
-</li>
-<li>
-<button onClick="shape('triangle');">Þríhyrningur</button>
-</li>
-</ul>
-
 <canvas id="myCanvas" width="800" height="600">
 <p>Your browser doesn't support HTML5. Please upgrade!</p>
 </canvas>
-	<script type="text/javascript" src="canvasdraw2.js"></script>
+
+<ul>
+<li>
+<button onClick="selection('brush')";>Pensill</button>
+</li>
+<li>
+<button onClick="selection('line')";>Lína</button>
+</li>
+<li>
+<button onClick="selection('square');">Ferhyrningur</button>
+</li>
+<li>
+<button onClick="selection('circle');">Hringur</button>
+</li>
+<li>
+<button onClick="selection('triangle');">Þríhyrningur</button>
+</li>
+</ul>
+
+
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script src="http://dean.edwards.name/base/Base.js"></script>
+	<script src="Base.js"></script>
+	<script type="text/javascript" src="canvas.js"></script>	
 	</BODY>
 </HTML>

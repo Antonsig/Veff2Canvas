@@ -4,14 +4,15 @@ window.onload = function(){
 
 var ShapeArr = [];
 
+
+
 function draw(){
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
 	var painting = false;
 	var lineThickness = 1;
-
-
-}
+	
+	
 
 var Shape = Base.extend({
 	constructor: function(x,y,col,type,lineWidth){
@@ -22,7 +23,7 @@ var Shape = Base.extend({
 		this.col = col;
 		this.type = type;
 		this.lineWidth = lineWidth;
-	},
+	}
 	// e-h föll
 
 
@@ -34,7 +35,7 @@ var Brush = new Shape.extend({
 	},
 	draw: function(context){
 		
-	})
+	}
 
 });
 
@@ -44,7 +45,7 @@ var Line = new Shape.extend({
 	},
 	draw: function(context){
 		
-	})
+	}
 
 });
 
@@ -54,7 +55,7 @@ var Square = new Shape.extend({
 	},
 	draw: function(context){
 		
-	})
+	}
 
 });
 
@@ -64,7 +65,7 @@ var Circle = new Shape.extend({
 	},
 	draw: function(context){
 		
-	})
+	}
 
 });
 
@@ -73,7 +74,8 @@ var Triangle = new Shape.extend({
 		this.base(x,y,col,"Triangle",w);
 	},
 	draw: function(context){
-
+		var canvas = document.getElementById("myCanvas");
+		var context = canvas.getContext("2d");
 		var painting = false;
 		var lineThickness = 1;
 
@@ -95,6 +97,8 @@ var Triangle = new Shape.extend({
 				context.stroke();
 			}
 		});	
-	})
+	}
 
 });
+
+}
