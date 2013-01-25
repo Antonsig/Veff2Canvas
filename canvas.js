@@ -4,10 +4,13 @@
 	}
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
+var shapeArray = [];
+var arrayCounter = 0;
+var form = "brush";
 
-
-function selection(form){
-	this.form = form;
+//Changes value of form variable
+function selection(newForm){
+	form = newForm;
 	console.log(this.form + " chosen!");
 }
 
@@ -16,31 +19,36 @@ function draw(){
 	$("#myCanvas").mousedown(function(e){
 		console.log("Í mousedown");
 		var newShape = createShape(e.pageX+11, e.pageY+11);
-	
-		console.log(e.pageX + " " + e.pageY);
 		
+		shapeArray[arrayCounter] = newShape;
+		
+		console.log(e.pageX + " " + e.pageY);
+		shapeArray[arrayCounter].draw(context);
+		arrayCounter = arrayCounter + 1;
+		console.log("Shapein eru: " + arrayCounter);
 	});	
 }
 
 //RETURNES CHOSEN SHAPE 
 function createShape(x, y){
-		if(selection.form == "brush"){
+		if(form === 'brush'){
 			return new Brush(x,y);
 		}
-		else if(selection.form == "line"){
+		else if(form === 'line'){
 			return new Line(x,y);
 		}
-		else if(selection.form == "square"){
+		else if(form === 'square'){
 			return new Square(x,y);
 		}
-		else if(selection.form == "Circle"){
+		else if(form === 'Circle'){
 			return new Circle(x,y);
 		}
-		else if(selection.form == "triangle"){
+		else if(form === 'triangle'){
 			return new Triangle(x,y);
 		}
 		else{
-			return new Brush(x,y);
+			console.log(selection.form);
+			alert("Hætta!");
 		}
 }	
 //GRUNNKLASINN
@@ -55,23 +63,18 @@ var Shape = Base.extend({
 	}
 });
 
-//BRUSH EKKI TILBÚINN
+//BRUSH CLASS
 var Brush = Shape.extend({
 	constructor: function(x,y){
 	this.base(x,y);
 	},
 	
 	draw : function(context){
-		var painting = false;
-		var lineThickness = 1;
-		$("#myCanvas").mousedown(function(e){
-			painting = true;
-			context.beginPath();	
-		});
+		var painting = true;
+		context.beginPath();	
 
 		$("#myCanvas").mouseup(function(e){
 			painting = false;
-
 		});
 		
 		$("#myCanvas").mousemove(function(e){
@@ -82,7 +85,7 @@ var Brush = Shape.extend({
 				context.stroke();
 			}
 		});	
-		console.log("Í Brush.draw");
+		
 	}
 	
 });
@@ -94,8 +97,15 @@ var Line = Shape.extend({
 	},
 	
 	draw : function(context){
-
+		context.beginPath();
+		context.moveTo(this.x,this.y);
 		console.log("In line");
+		$("#myCanvas").mouseup(function(e){
+				mouseX = e.pageX - this.offsetLeft;
+				mouseY = e.pageY - this.offsetTop;
+				context.lineTo(mouseX, mouseY);
+				context.stroke();
+		});
 	}
 });
 
