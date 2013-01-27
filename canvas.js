@@ -1,20 +1,35 @@
 	window.onload = function(){
-		draw();
+		drawing();
 		selection('brush');
 	}
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
 var shapeArray = [];
 var arrayCounter = 0;
+var redoshapeArray = [];
+var redoarrayCounter = 0;
 var form = "brush";
 
-function deletelastfromArray(arr){
+function drawAll(array, len){
+	for(var i = 0; i<len; i++){
+		shapeArray[i].draw(context);
+		console.log(i);
+	}
+}
+
+function undo(arr){
+	redoshapeArray[redoarrayCounter] = shapeArray[arrayCounter];
 	arr.splice(arrayCounter,1);
+	redoarrayCounter++;
 	arrayCounter--;
 	context.clearRect(11, 11, canvas.width, canvas.height);
-	for(i = 0; i < arr.lenth; i++ ){
-		shapeArray[i].draw(context);
-	}
+	drawAll(shapeArray,arrayCounter);
+	console.log("í shapeArrayinu eru " + arrayCounter + " shape");
+	console.log(" í redoArrayinu eru " + redoarrayCounter + " shape");
+}
+
+function redo(arr){
+	
 }
 
 //Changes value of form variable
@@ -23,7 +38,8 @@ function selection(newForm){
 	console.log(this.form + " chosen!");
 }
 
-function draw(){
+
+function drawing(){
 	
 	$("#myCanvas").mousedown(function(e){
 		var newShape = createShape(e.pageX+11, e.pageY+11);
@@ -48,7 +64,7 @@ function createShape(x, y){
 		else if(form === 'square'){
 			return new Square(x,y);
 		}
-		else if(form === 'Circle'){
+		else if(form === 'circle'){
 			return new Circle(x,y);
 		}
 		else if(form === 'triangle'){
@@ -93,7 +109,7 @@ var Brush = Shape.extend({
 				context.stroke();
 			}
 		});	
-		
+
 	}
 	
 });
