@@ -8,6 +8,15 @@ var shapeArray = [];
 var arrayCounter = 0;
 var form = "brush";
 
+function deletelastfromArray(arr){
+	arr.splice(arrayCounter,1);
+	arrayCounter--;
+	context.clearRect(11, 11, canvas.width, canvas.height);
+	for(i = 0; i < arr.lenth; i++ ){
+		shapeArray[i].draw(context);
+	}
+}
+
 //Changes value of form variable
 function selection(newForm){
 	form = newForm;
@@ -17,14 +26,13 @@ function selection(newForm){
 function draw(){
 	
 	$("#myCanvas").mousedown(function(e){
-		console.log("Í mousedown");
 		var newShape = createShape(e.pageX+11, e.pageY+11);
 		
 		shapeArray[arrayCounter] = newShape;
 		
 		console.log(e.pageX + " " + e.pageY);
 		shapeArray[arrayCounter].draw(context);
-		arrayCounter = arrayCounter + 1;
+		arrayCounter++;
 		console.log("Shapein eru: " + arrayCounter);
 	});	
 }
@@ -48,7 +56,7 @@ function createShape(x, y){
 		}
 		else{
 			console.log(selection.form);
-			alert("Hætta!");
+			alert("Villa í Vali");
 		}
 }	
 //GRUNNKLASINN
@@ -90,7 +98,7 @@ var Brush = Shape.extend({
 	
 });
 
-// Í vinnslu
+// LINE CLASS
 var Line = Shape.extend({
 	constructor: function(x,y){
 	this.base(x,y);
@@ -99,12 +107,18 @@ var Line = Shape.extend({
 	draw : function(context){
 		context.beginPath();
 		context.moveTo(this.x,this.y);
+		
 		console.log("In line");
+		$("#myCanvas").mousemove(function(e){
+		
+			//Vantar að sýna línu preview!	
+		});	
+
 		$("#myCanvas").mouseup(function(e){
-				mouseX = e.pageX - this.offsetLeft;
-				mouseY = e.pageY - this.offsetTop;
-				context.lineTo(mouseX, mouseY);
-				context.stroke();
+			mouseX = e.pageX - this.offsetLeft;
+			mouseY = e.pageY - this.offsetTop;
+			context.lineTo(mouseX, mouseY);
+			context.stroke();
 		});
 	}
 });
@@ -113,11 +127,23 @@ var Line = Shape.extend({
 var Square = Shape.extend({
 	constructor: function(x,y){
 	this.base(x,y);
+
 	},
 	
 	draw : function(context){
-		drawtest(this.x, this.y);
+		context.beginPath();	
+		context.moveTo(this.x,this.y);
+		tempX = this.x;
+		tempY = this.y;
+
 		console.log("In Square");
+		$("#myCanvas").mouseup(function(e){
+			mouseX = e.pageX - this.offsetLeft;
+			mouseY = e.pageY - this.offsetTop;
+			context.rect(tempX, tempY, mouseX - tempX, mouseY - tempY);
+			context.stroke();
+		});
+
 	}
 });
 
@@ -146,7 +172,7 @@ var Triangle = Shape.extend({
 });
 
 
-//Einfaldur teiknaður kassi
+//Einfaldur teiknaður kassi - EYÐA Í LOKIN
 function drawtest(x,y){
 	context.beginPath();
 	context.moveTo(x,y);
