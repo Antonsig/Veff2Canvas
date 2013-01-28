@@ -28,18 +28,19 @@ function selform(newForm){
 
 function drawing(){
 	$("#myCanvas").mousedown(function(e){
-		var newShape = createShapeClass(e.pageX+11, e.pageY+11, color, linewidth);
+		var newShape = createShapeClass(e.pageX+11, e.pageY+11, color, linewidth);	
 		newShape.draw(context);
-		
-		$("#myCanvas").mouseup(function(e){
-			var painting = false;
-			shapeArray[shapeArraylength] = newShape;
-			shapeArraylength++;		
-			console.log("Shapein eru: " + shapeArraylength);		
-		});
-	});	
-	
 
+		shapeArray[shapeArraylength] = newShape;
+		shapeArraylength++;	
+		console.log("Shapein eru: " + shapeArraylength);	
+		// $("#myCanvas").mouseup(function(e){
+			// var painting = false;
+			// shapeArray[shapeArraylength] = newShape;
+			// shapeArraylength++;	
+			// console.log("Shapein eru: " + shapeArraylength);	
+		// });
+	});	
 	
 }
 
@@ -66,8 +67,6 @@ function createShapeClass(x, y, color, linewidth){
 	}
 }
 
-
-
 //GRUNNKLASINN
 var Shape = Base.extend({
 	constructor: function(x,y,color,linewidth){
@@ -76,7 +75,6 @@ var Shape = Base.extend({
 		this.color = color;
 		this.linewidth = linewidth;
 	},
-	
 });
 
 //GRUNNKLASINN
@@ -84,27 +82,32 @@ var Brush = Base.extend({
 	constructor: function(x, y, color, linewidth){
 		this.base(x, y, color, linewidth);
 		this.line = [];
-
 	},
-	
+
 	draw: function(){
 			var painting = true;
 			var linesize = 0;
+			context.beginPath();
+			context.fillstyle = color;
+			
+			$("#myCanvas").mouseup(function(e){
+				painting = false;
+			});			
 			
 			$("#myCanvas").mousemove(function(e){
 				if (painting) {
 					mouseX = e.pageX - this.offsetLeft;
 					mouseY = e.pageY - this.offsetTop;
+					console.log(color);
+
 					context.lineTo(mouseX, mouseY);
 					context.stroke();
-					this.line[linesize] = context;
-					linesize++;
+					//this.line[linesize] = context;
+					//linesize++;
 				}
 			});
 			
-			$("#myCanvas").mouseup(function(e){
-				painting = false;
-			});
+
 			
 		
 	}
