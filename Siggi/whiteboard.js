@@ -8,7 +8,6 @@ var context = null;
 var off = 0;
 var mouseDown = false;
 
-
 function getContext(canvasId){
   canvas = document.getElementById(canvasId);
   context = canvas.getContext('2d');
