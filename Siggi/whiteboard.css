@@ -1,0 +1,50 @@
+body{
+	background-color: #39f;
+}
+
+#myCanvas{
+	position:absolute;
+	top: 40px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000;
+	background-color: #fff;
+}
+#buttonblack{
+	position:absolute;
+	width: 50px;
+	height: 20px;
+	background-color: #000;
+}
+#buttonred{
+	position:absolute;
+	width: 50px;
+	height: 20px;
+	background-color: #f00;
+	left: 50px;
+}
+#buttonblue{
+	position:absolute;
+	width: 50px;
+	height: 20px;
+	background-color: #00f;
+	left: 100px;
+}
+#buttongreen{
+	position:absolute;
+	width: 50px;
+	height: 20px;
+	background-color: #0f0;
+	left: 150px;
+}
+#buttonwhite{
+	position:absolute;
+	width: 50px;
+	height: 17px;
+	background-color: #fff;
+	left: 200px;
+	font-size: 10px;
+	text-align: center;
+	padding-top: 3px;
+
+}
