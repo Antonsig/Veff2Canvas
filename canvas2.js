@@ -1,9 +1,4 @@
 
-window.onload = function(){
-	drawing();
-}
-
-
 
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
@@ -25,8 +20,6 @@ function selform(newForm){
 	console.log(this.form + " chosen!");
 }
 
-
-function drawing(){
 	$("#myCanvas").mousedown(function(e){
 		var newShape = createShapeClass(e.pageX+11, e.pageY+11, color, linewidth);	
 		newShape.draw(context);
@@ -42,7 +35,7 @@ function drawing(){
 		// });
 	});	
 	
-}
+
 
 
 function createShapeClass(x, y, color, linewidth){
@@ -88,7 +81,7 @@ var Brush = Base.extend({
 			var painting = true;
 			var linesize = 0;
 			context.beginPath();
-			context.fillstyle = color;
+			context.strokeStyle = color;
 			
 			$("#myCanvas").mouseup(function(e){
 				painting = false;
@@ -98,12 +91,11 @@ var Brush = Base.extend({
 				if (painting) {
 					mouseX = e.pageX - this.offsetLeft;
 					mouseY = e.pageY - this.offsetTop;
-					console.log(color);
 
 					context.lineTo(mouseX, mouseY);
 					context.stroke();
-					//this.line[linesize] = context;
-					//linesize++;
+					this.line[linesize] = ;
+					linesize++;
 				}
 			});
 			
