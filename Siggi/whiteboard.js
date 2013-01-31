@@ -55,6 +55,9 @@ $('#submit').click(function(){
   var img = new Image()
   img.src = c
   uploadcontext.drawImage(img,0,0);
+  if(a.value == ""){
+    alert('No image selected, press "Choose File" to select an image!');
+  }
 });
 
 function freeDrawStart(xpos, ypos){
