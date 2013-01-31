@@ -1,5 +1,6 @@
 body{
 	background-color: #39f;
+	text-align: center;
 }
 #myCanvas{
 	position:absolute;
@@ -75,5 +76,24 @@ body{
 	font-size: 10px;
 	text-align: center;
 	padding-top: 3px;
-
+}
+#buttonclear{
+	position: absolute;
+	width: 70px;
+	height: 17px;
+	background-color: #fff;
+	left: 400px;
+	font-size: 10px;
+	text-align: center;
+	padding-top: 3px;
+}
+#buttonsave{
+	position: absolute;
+	width: 70px;
+	height: 17px;
+	background-color: #fff;
+	left: 470px;
+	font-size: 10px;
+	text-align: center;
+	padding-top: 3px;
 }

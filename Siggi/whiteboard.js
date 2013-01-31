@@ -1,5 +1,6 @@
 var color = '#000';
-var currentTool = 'brush';
+var tool = 'brush';
+var linesize = 1;
 var mouseX = 0;
 var mouseY = 0;
 var mousedownX = 0;
@@ -16,13 +17,13 @@ function getContext(canvasId){
   context = canvas.getContext('2d');
 }
 $('#buttonbrush').click( function(){
-  currentTool = 'brush';
+  tool = 'brush';
 });
 $('#buttonbox').click( function(){
-  currentTool = 'box';
+  tool = 'box';
 });
 $('#buttoncircle').click( function(){
-  currentTool = 'circle';
+  tool = 'circle';
 });
 $('#buttonblack').click( function(){
   color = '#000';
@@ -39,11 +40,32 @@ $("#buttongreen").click( function(){
 $('#buttonwhite').click( function(){
   color = '#fff';
 });
+$('#buttonclear').click( function(){
+  context.clearRect(0, 0, 800, 700);
+});
+$('#buttonsave').click( function(){
+  canvasToImage();
+});
+$('#submit').click(function(){
+  var a = document.getElementById('input'),
+  b = encodeURI(a.value),
+  c = b.replace("C:%5Cfakepath%5C","");
+  var uploadcanvas = document.getElementById('myCanvas');
+  var uploadcontext = uploadcanvas.getContext('2d');
+  var img = new Image()
+  img.src = c
+  uploadcontext.drawImage(img,0,0);
+});
 
 function freeDrawStart(xpos, ypos){
+  if(color == '#fff'){
+    context.lineWidth = 6;
+  }
+  else{
+    context.lineWidth = linesize;
+  }
   context.strokeStyle = color;
   context.lineCap = 'round';
-  context.lineWidth = 6;
   context.beginPath();
   context.moveTo(xpos, ypos);
 }
@@ -65,6 +87,10 @@ function drawcircle(mousedownX, mousedownY, radius){
   context.closePath();
   context.fill();
 }
+function canvasToImage() {
+  var thecanvase = document.getElementById('myCanvas');
+  window.open(thecanvase.toDataURL('imge/png'));
+}
 
 //-----------Meðan á keyrslu vefsíðu stendur--------------
 $(document).ready(function(){
@@ -75,7 +101,7 @@ $(document).ready(function(){
     mousedownX = e.pageX - off.left;
     mousedownY = e.pageY - off.top;
 
-    if(currentTool == 'brush'){
+    if(tool == 'brush'){
       freeDrawStart(mousedownX, mousedownY);
     }
     mouseDown = true;
@@ -85,16 +111,16 @@ $(document).ready(function(){
     if(mouseDown){
       mouseX = e.pageX - off.left;
       mouseY = e.pageY - off.top;
-      width = Math.abs(mouseX - mousedownX);
-      height = Math.abs(mouseY - mousedownY);
+      width = (mouseX - mousedownX);
+      height = (mouseY - mousedownY);
       var radius = (mouseX - mousedownX);
-      if(currentTool == 'brush'){
+      if(tool == 'brush'){
         freeDrawEnd(mouseX + 1, mouseY + 1);
       }
-      else if(currentTool == 'box'){
+      else if(tool == 'box'){
         drawbox(mousedownX, mousedownY, width, height);
       }
-      else if(currentTool == 'circle'){
+      else if(tool == 'circle'){
         drawcircle(mousedownX, mousedownY, radius);
       }
     }
