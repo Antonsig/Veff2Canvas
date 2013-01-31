@@ -77,7 +77,7 @@ var Brush = Base.extend({
 		this.line = [];
 	},
 
-	draw: function(){
+	draw : function(){
 			var painting = true;
 			var linesize = 0;
 			context.beginPath();
