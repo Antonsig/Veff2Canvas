@@ -5,6 +5,7 @@ var shapeArray = [];
 var shapeArraylength = -1;
 var form = "brush";
 var color = "rgba(0,0,0,1)";
+var filled = true;
 var lineWidth = 6;
 var mouseX = 0;
 var mouseY = 0;
@@ -15,9 +16,10 @@ var height;
 
 function redraw(){
     context.clearRect(0,0,800,400);
-    for(var i = 0; i < shapeArraylength + 1; i++){
+	
+    for(var i = 0; i < shapeArraylength + 1; i++){		
         shapeArray[i].draw(context);
-        console.log(shapeArray[i].x);
+        console.log(shapeArray[i].x + " " + shapeArray[i].y + " " + shapeArray[i].col + " " + shapeArray[i].shapeName + " " + shapeArray[i].endx + " " + shapeArray[i].endy + " " + shapeArray[i].lineW);
     }
 }
 
@@ -31,7 +33,7 @@ var stylePaddingLeft, stylePaddingTop, styleBorderLeft, styleBorderTop;
 } 
 
 //Leið til að láta mús virka bæði í firefox og chrome
-getMouse = function(e, canvas) {
+getMouse = function(e, canvas) { 
 	var element = canvas, offsetX = 0, offsetY = 0;
 	if (element.offsetParent) {
 		do {
@@ -53,8 +55,8 @@ getMouse = function(e, canvas) {
 	};
 }
 
-function selcol(col){
-	color = col;
+function selcol(c){
+	color = c;
 	console.log(this.color + " chosen!");
 }
 
@@ -73,20 +75,18 @@ $('#myCanvas').mousemove(function (e){
 		width = (mouseX - mousedownX);
 		height = (mouseY - mousedownY);
 		var radius = (mouseX - mousedownX);
+		shapeArray[shapeArraylength].endx = mouseX;
+		shapeArray[shapeArraylength].endy = mouseY;
+	
 		if(form === 'brush'){
 			current.draw(context);
-			//console.log(current.x);
-			//console.log(current.x + " " + current.y);
-			//console.log("í mousemove if Brush");
-			//freeDrawStart(mouseX,mouseY);
 		}
 		else if(form === 'line'){
 			
 		}
 		else if(form ===  'square'){
-			//console.log(width + " " + height + " " + mousedownX, + " " + mousedownY );
-			
-            current.draw(context);
+
+			redraw();
 		}
 		else if(form ===  'circle'){
 			current.draw(context);
@@ -121,7 +121,14 @@ $('#myCanvas').mousedown(function (e){
 
 $('#myCanvas').mouseup(function (e){	
 	mouseDown = false;
-    
+	if(form ===  'square'){
+		var tempMouse = getMouse(e, canvas);
+		mouseX = tempMouse.x;
+		mouseY = tempMouse.y;
+		shapeArray[shapeArraylength].endx = mouseX;
+		shapeArray[shapeArraylength].endy = mouseY;
+		shapeArray[shapeArraylength].draw(context);
+	}
 });
 
 function createShapeClass(x, y, col, lw, sh){
@@ -144,8 +151,8 @@ function createShapeClass(x, y, col, lw, sh){
 	else if(form === 'triangle'){
 		return new Triangle(x,y);
 	}
-	else{
-		alert("Villa í Vali");
+	else if(form === 'text'){
+	
 	}
 }
 
@@ -188,18 +195,25 @@ var Brush = Shape.extend({
 
 //Square Class
 var Square = Shape.extend({
-	constructor: function(x, y, color, lineWidth, shapeName){
-		this.base(x, y, color, lineWidth, shapeName);
+	constructor: function(x, y, col, lineW, shapeName){
+		this.base(x, y, col, lineW, shapeName);
         
 	},
 
 	draw: function(ctx){
-        
-		ctx.beginPath();
-		ctx.rect(mousedownX, mousedownY, width, height);
-        this.endx = mouseDown + width;
-        this.endy = mouseDown + height;
+        ctx.x = this.x;
+		ctx.y = this.y;
+		ctx.lineW = this.lineW;
 		ctx.fillStyle = this.col;
+		// if( this.selected === true){
+			// ctx.endx = this.endx;
+			// ctx.endy = this.endy;
+		// }
+
+
+		ctx.beginPath();
+		ctx.rect(this.x, this.y, this.endx - this.x, this.endy - this.y);
+
 		ctx.closePath();
 		ctx.fill();
 	}
