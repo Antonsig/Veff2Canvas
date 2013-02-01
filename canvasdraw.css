@@ -23,12 +23,12 @@ a.form
 	text-decoration: none;
 	float: left;
 	margin-right: 16px;
-	font-family: "Arial Black", Gadget, sans-serif;
+	font-family: Clarendon;
 	color: #000;
 	border: 1px solid #000;
 	padding: 12px;
 	border-bottom: none;
-	width: 120px;
+	width: 93px;
 	text-align: center;
 	display: block;
 	background: #70AED5;
@@ -48,7 +48,7 @@ a.form
 	border: 1px solid black;
 	padding: 7px 12px;
 	border-bottom: none;
-	width: 120px;
+	width: 93px;
 	height: 2px;
 	text-align: center;
 	display: block;
@@ -81,4 +81,43 @@ a.form
 .colorblue
 {
 	background: rgba(11,46,130,1);
+}
+
+.colorwhite
+{
+	background: rgba(255,255,255,1);
+}
+
+#buttons
+{
+	position: absolute;
+	width: 920px;
+}
+
+a.aukaval
+{
+	text-decoration: none;
+	float: left;
+	margin-right: 10px;
+	font-family: Clarendon;
+	color: #000;
+	border: 1px solid #000;
+	padding: 10px;
+	border-bottom: none;
+	width: 90px;
+	text-align: center;
+	display: block;
+	background: #70AED5;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-moz-border-shadow: 3px 3px 8px #333;
+	box-shadow: 3px 3px 8px #333;
+}
+
+#input
+{
+	position: absolute;
+	width: 810px;
+	margin: 510px 0px 0px 55px;
+
 }

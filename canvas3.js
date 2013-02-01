@@ -1,160 +1,230 @@
-
-
-
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
 var mouseDown = false;
 var shapeArray = [];
-var shapeArraylength = 0;
-var redoArray = [];
-var redoArraylenght = -1;
+var shapeArraylength = -1;
 var form = "brush";
 var color = "rgba(0,0,0,1)";
+var filled = true;
 var lineWidth = 6;
 var mouseX = 0;
 var mouseY = 0;
 var mousedownX = 0;
 var mousedownY = 0;
-var off = 0;
+var width;
+var height;
 
-// function freeDrawStart(ctx, xpos, ypos, color, lineWidth){
-	// context.strokeStyle = "rgba(0,0,0,1)";
-	// context.lineWidth = 6;
-	// context.beginPath();
-	// context.moveTo(xpos, ypos);
-	// mouseX = e.pageX - this.offsetLeft;
-	// mouseY = e.pageY - this.offsetTop;
-	// context.lineTo(mouseX, mouseY);
-	// context.stroke();
-	// console.log("Halló");
-// }
+function redraw(){
+    context.clearRect(0,0,800,400);
+	
+    for(var i = 0; i < shapeArraylength + 1; i++){		
+        shapeArray[i].draw(context);
+        console.log(shapeArray[i].x + " " + shapeArray[i].y + " " + shapeArray[i].col + " " + shapeArray[i].shapeName + " " + shapeArray[i].endx + " " + shapeArray[i].endy + " " + shapeArray[i].lineW);
+    }
+}
 
-function selcol(col){
-	color = col;
-	console.log(this.color + " chosen!");
+//til að stilla af mús ef padding og border trufla
+var stylePaddingLeft, stylePaddingTop, styleBorderLeft, styleBorderTop;
+	if (document.defaultView && document.defaultView.getComputedStyle) {
+	stylePaddingLeft = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingLeft'], 10)      || 0;
+	stylePaddingTop  = parseInt(document.defaultView.getComputedStyle(canvas, null)['paddingTop'], 10)       || 0;
+	styleBorderLeft  = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderLeftWidth'], 10)  || 0;
+	styleBorderTop   = parseInt(document.defaultView.getComputedStyle(canvas, null)['borderTopWidth'], 10)   || 0;
+} 
+
+//Leið til að láta mús virka bæði í firefox og chrome
+getMouse = function(e, canvas) { 
+	var element = canvas, offsetX = 0, offsetY = 0;
+	if (element.offsetParent) {
+		do {
+			offsetX += element.offsetLeft;
+			offsetY += element.offsetTop;
+		} while ((element = element.offsetParent));
+	}
+
+	// Add padding and border style widths to offset
+	offsetX += stylePaddingLeft;
+	offsetY += stylePaddingTop;
+	offsetX += styleBorderLeft;
+	offsetY += styleBorderTop;
+
+	// We return an javascript object with x and y defined
+	return {
+		x: e.pageX - offsetX,
+		y: e.pageY - offsetY
+	};
+}
+
+function selcol(c){
+	color = c;
 }
 
 function selform(newForm){
 	form = newForm;
-	console.log(this.form + " chosen!");
 }
 
 
 $('#myCanvas').mousemove(function (e){
 	if(mouseDown){
-
-		mouseX = e.pageX - off.left;
-		mouseY = e.pageY - off.top;
-		width = Math.abs(mouseX - mousedownX);
-		height = Math.abs(mouseY - mousedownY);
-		
+		var current = shapeArray[shapeArraylength];
+		var tempMouse = getMouse(e, canvas);
+		mouseX = tempMouse.x;
+		mouseY = tempMouse.y;
+		width = (mouseX - mousedownX);
+		height = (mouseY - mousedownY);
 		var radius = (mouseX - mousedownX);
-		if(form === 'brush'){
-			//shapeArray[shapeArraylength].draw(contextstate);
-			//console.log("í mousemove if Brush");
-			//freeDrawStart(mouseX,mouseY);
-		}
-		else if(form === 'line'){
-			
-		}
-		else if(form ===  'box'){
-			drawbox(mousedownX, mousedownY, width, height);
-		}
-		else if(form ===  'circle'){
-			drawcircle(mousedownX, mousedownY, radius);
-		}
+		shapeArray[shapeArraylength].endx = mouseX;
+		shapeArray[shapeArraylength].endy = mouseY;
+		redraw();	
     }
 });	
-	$('#myCanvas').mousedown(function (e){
-		mouseDown = true;
-		shapeArraylength++;		
-		mousedownX = e.pageX - off.left;
-		mousedownY = e.pageY - off.top;
-		var newShape = createShapeClass(e.pageX+11, e.pageY+11, color, lineWidth);	
-		shapeArray[shapeArraylength] = newShape;
-		contextstate = context;
-		if(form === 'brush'){
-			if(mousemove === true){
-				shapeArray[shapeArraylength].draw(context);			
-			}
 
-			console.log(shapeArraylength);
-		}
-		if(form === 'line'){
-			newShape.draw(mousedownX, mousedownY);
-		}
-
-
-	});
+$('#myCanvas').mousedown(function (e){
+	shapeArraylength++;		
+	var tempMouse = getMouse(e, canvas);
+	mousedownX = tempMouse.x;
+	mousedownY = tempMouse.y;
+	lineWidth = document.getElementById("linewidth").value;
+	var newShape = createShapeClass(mousedownX, mousedownY, color, lineWidth, form);
+    console.log("MX " + mousedownX + "| MY " + mousedownY + "| Color " + color + "| lineWidth " + lineWidth  + "| nameofShape " + form);
+    console.log(newShape.shapeName);
+	shapeArray.push(newShape);
+	mouseDown = true;
+});
 
 
 $('#myCanvas').mouseup(function (e){	
 	mouseDown = false;
-	mousemove = false;
+	var tempMouse = getMouse(e, canvas);
+	mouseX = tempMouse.x;
+	mouseY = tempMouse.y;
+	shapeArray[shapeArraylength].endx = mouseX;
+	shapeArray[shapeArraylength].endy = mouseY;
+	shapeArray[shapeArraylength].draw(context);
+
 });
 
-function createShapeClass(x, y, color, linewidth){
+function createShapeClass(x, y, col, lw, sh){
 	if(form === 'brush'){
-		return new Brush(x, y, color, linewidth);
+		return new Brush(x, y, col, lw, sh);
 	}
 	else if(form === 'line'){
-		return new Line(x,y);
+		return new Line(x, y, col, lw, sh);
 	}
 	else if(form === 'square'){
-		return new Square(x,y);
+		return new Square(x, y, col, lw, sh);
 	}
 	else if(form === 'circle'){
-		return new Circle(x,y);
+		return new Circle(x, y, col, lw, sh);
 	}
 	else if(form === 'triangle'){
-		return new Triangle(x,y);
+		return new Triangle(x, y, col, lw, sh);
 	}
-	else{
-		alert("Villa í Vali");
+	else if(form === 'text'){
+		return new Text(x, y, col, lw, sh);
 	}
 }
 
 //GRUNNKLASINN
 var Shape = Base.extend({
-	constructor: function(x,y,color,lineWidth){
+	constructor: function(x, y, col, lineW, shapeName){
 		this.x = x;
 		this.y = y;
-		this.color = color;
-		this.lineWidth = lineWidth;
+        this.endx = x;
+        this.endy = y;
+		this.col = col;
+		this.lineW = lineW;
+        this.shapeName = shapeName;
 	},
 });
 
-//GRUNNKLASINN
-var Brush = Base.extend({
-	constructor: function(x, y, color, lineWidth){
-		this.base(x, y, color, lineWidth);
-		this.line = [];
+//Brush Class
+var Brush = Shape.extend({
+	constructor: function(x, y, col, lineW, shapeName){
+		this.base(x, y, col, lineWidth, shapeName);
+		this.lines = [];
+		this.lineCounter = 0;
 	},
 
-	draw: function(context){
+	draw: function(ctx){
+		for(var i = 0; i < this.lineCounter; i++){
 		context.beginPath();	
-		//context.strokeStyle = "rgba(0,0,0,1)";
-		//context.lineWidth = 6;
-		console.log(context.color);
-
-		
-		if(mouseDown){
-			context.lineTo(x,y);
-			context.stroke();
-			console.log("í draw!");
+		ctx.x = this.x;
+		ctx.y = this.y;
+		ctx.strokeStyle = this.col;
+		ctx.lineWidth = this.lineW;
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.y);
+		ctx.closePath();
+		ctx.stroke();
 		}
-	
+		this.lineCounter++;
 
+	}
 	
-		// mouseX = e.pageX - this.offsetLeft;
-		// mouseY = e.pageY - this.offsetTop;
-		// freeDrawStart(ctx, mouseX, mouseY, color, lineWidth);
-		
-		// context.strokeStyle = color;
-		// context.lineCap = 'round';
-		// context.lineWidth = this.lineWidth;
-		// context.beginPath();
-		// context.moveTo(mouseX, mouseY);
+});
+
+//Square Class
+var Square = Shape.extend({
+	constructor: function(x, y, col, lineW, shapeName){
+		this.base(x, y, col, lineW, shapeName);
+        
 	},
-	
+
+	draw: function(ctx){
+        ctx.x = this.x;
+		ctx.y = this.y;
+		ctx.strokeStyle = this.col;
+		ctx.lineWidth = this.lineW;
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.y);
+		ctx.lineTo(this.x, this.endy);
+		ctx.lineTo(this.endx, this.endy);
+		ctx.lineTo(this.endx, this.y);
+		ctx.closePath();
+		ctx.stroke();
+		////// FYRIR FYLLTAN KASSA /////
+		// ctx.fillStyle = this.col;
+		// ctx.rect(this.x, this.y, this.endx - this.x, this.endy - this.y);
+		// ctx.closePath();
+		// ctx.fill();
+		////////////////////////////////
+	}
+});
+
+//Line Class
+var Line = Shape.extend({
+	constructor: function(x, y, col, lineW, shapeName){
+		this.base(x, y, col, lineW, shapeName);
+	},
+
+	draw: function(ctx){
+        ctx.x = this.x;
+		ctx.y = this.y;
+		ctx.lineWidth = this.lineW;
+		ctx.strokeStyle = this.col;
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.y);
+		ctx.lineTo(this.endx, this.endy);
+		ctx.closePath();
+		ctx.stroke();
+	}
+});
+
+//Circle Class
+var Circle = Shape.extend({
+	constructor: function(x, y, col, lineW, shapeName){
+		this.base(x, y, col, lineW, shapeName);
+	},
+
+	draw: function(ctx){
+        ctx.x = this.x;
+		ctx.y = this.y;
+		ctx.lineWidth = this.lineW;
+		ctx.radius = Math.sqr
+		ctx.strokeStyle = this.col;
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, this.endx + this.endy - this.x - this.y, 0, 2*Math.PI);
+		ctx.stroke();
+	}
 });
