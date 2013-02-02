@@ -5,21 +5,21 @@ var shapeArray = [];
 var shapeArraylength = -1;
 var form = "brush";
 var color = "rgba(0,0,0,1)";
-var filled = true;
+var fyllir = false;
 var lineWidth = 6;
 var mouseX = 0;
 var mouseY = 0;
 var mousedownX = 0;
 var mousedownY = 0;
-var width;
-var height;
+//var width;
+//var height;
 
 function redraw(){
     context.clearRect(0,0,800,400);
 	
     for(var i = 0; i < shapeArraylength + 1; i++){		
         shapeArray[i].draw(context);
-        console.log(shapeArray[i].x + " " + shapeArray[i].y + " " + shapeArray[i].col + " " + shapeArray[i].shapeName + " " + shapeArray[i].endx + " " + shapeArray[i].endy + " " + shapeArray[i].lineW);
+        console.log(shapeArray[i].x + " " + shapeArray[i].y + " " + shapeArray[i].endx + " " + shapeArray[i].endy + " " + shapeArray[i].lineW + " " + shapeArray[i].col + " " + shapeArray[i].shapeName);
     }
 }
 
@@ -64,18 +64,29 @@ function selform(newForm){
 }
 
 
+$('#check').click( function(){
+ if(document.getElementById('check').checked){
+ 		fyllir = true;
+ 	}
+ 	else{
+ 		fyllir = false;
+ 	}
+ 	console.log(fyllir);
+
+ });
+
 $('#myCanvas').mousemove(function (e){
 	if(mouseDown){
-		var current = shapeArray[shapeArraylength];
 		var tempMouse = getMouse(e, canvas);
 		mouseX = tempMouse.x;
 		mouseY = tempMouse.y;
-		width = (mouseX - mousedownX);
-		height = (mouseY - mousedownY);
-		var radius = (mouseX - mousedownX);
 		shapeArray[shapeArraylength].endx = mouseX;
 		shapeArray[shapeArraylength].endy = mouseY;
-		redraw();	
+		if(form === 'brush'){
+			shapeArray[shapeArraylength].hnitx.push(mouseX);
+			shapeArray[shapeArraylength].hnity.push(mouseY);
+		}
+		redraw();
     }
 });	
 
@@ -85,8 +96,8 @@ $('#myCanvas').mousedown(function (e){
 	mousedownX = tempMouse.x;
 	mousedownY = tempMouse.y;
 	lineWidth = document.getElementById("linewidth").value;
-	var newShape = createShapeClass(mousedownX, mousedownY, color, lineWidth, form);
-    console.log("MX " + mousedownX + "| MY " + mousedownY + "| Color " + color + "| lineWidth " + lineWidth  + "| nameofShape " + form);
+	var newShape = createShapeClass(mousedownX, mousedownY, color, lineWidth, form, fyllir);
+    console.log("MX " + mousedownX + "| MY " + mousedownY + "| Color " + color + "| lineWidth " + lineWidth  + "| nameofShape " + form + "| Filled " + fyllir);
     console.log(newShape.shapeName);
 	shapeArray.push(newShape);
 	mouseDown = true;
@@ -104,30 +115,30 @@ $('#myCanvas').mouseup(function (e){
 
 });
 
-function createShapeClass(x, y, col, lw, sh){
-	if(form === 'brush'){
-		return new Brush(x, y, col, lw, sh);
+function createShapeClass(x, y, col, lw, sh, filled){
+	if(sh === 'brush'){
+		return new Brush(x, y, col, lw, sh, filled);
 	}
-	else if(form === 'line'){
-		return new Line(x, y, col, lw, sh);
+	else if(sh === 'line'){
+		return new Line(x, y, col, lw, sh, filled);
 	}
-	else if(form === 'square'){
-		return new Square(x, y, col, lw, sh);
+	else if(sh === 'square'){
+		return new Square(x, y, col, lw, sh, filled);
 	}
-	else if(form === 'circle'){
-		return new Circle(x, y, col, lw, sh);
+	else if(sh === 'circle'){
+		return new Circle(x, y, col, lw, sh, filled);
 	}
-	else if(form === 'triangle'){
-		return new Triangle(x, y, col, lw, sh);
+	else if(sh === 'triangle'){
+		return new Triangle(x, y, col, lw, sh, filled);
 	}
-	else if(form === 'text'){
-		return new Text(x, y, col, lw, sh);
+	else if(sh === 'text'){
+		return new Text(x, y, col, lw, sh, filled);
 	}
 }
 
 //GRUNNKLASINN
 var Shape = Base.extend({
-	constructor: function(x, y, col, lineW, shapeName){
+	constructor: function(x, y, col, lineW, shapeName, filled){
 		this.x = x;
 		this.y = y;
         this.endx = x;
@@ -135,43 +146,51 @@ var Shape = Base.extend({
 		this.col = col;
 		this.lineW = lineW;
         this.shapeName = shapeName;
+        this.filled = filled;
 	},
 });
 
 //Brush Class
 var Brush = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName){
-		this.base(x, y, col, lineWidth, shapeName);
-		this.lines = [];
-		this.lineCounter = 0;
+	constructor: function(x, y, col, lineW, shapeName, filled){
+		this.base(x, y, col, lineW, shapeName, filled);
+		this.hnitx = [];
+		this.hnity = [];
+		this.arraylength = 1;
+		this.hnitx[0] = x;
+		this.hnity[0] = y;
 	},
 
 	draw: function(ctx){
-		for(var i = 0; i < this.lineCounter; i++){
-		context.beginPath();	
-		ctx.x = this.x;
-		ctx.y = this.y;
-		ctx.strokeStyle = this.col;
 		ctx.lineWidth = this.lineW;
-		ctx.beginPath();
-		ctx.moveTo(this.x, this.y);
-		ctx.closePath();
-		ctx.stroke();
-		}
-		this.lineCounter++;
 
+		ctx.strokeStyle = this.col;
+		ctx.beginPath();
+		for(var i = 0; i < this.hnitx.length; i++){
+			this.drawlines(this.hnitx[i], this.hnity[i], this.hnitx[i+1], this.hnity[i+1]);
+			console.log(i + " " + this.hnitx[i]);
+		}
+	},
+
+	drawlines: function(fx,fy,tx,ty){
+		context.beginPath();
+		context.moveTo(fx,fy);
+		context.lineTo(tx,ty);
+		context.closePath();
+		context.stroke();	
 	}
 	
 });
 
 //Square Class
 var Square = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName){
-		this.base(x, y, col, lineW, shapeName);
+	constructor: function(x, y, col, lineW, shapeName, filled){
+		this.base(x, y, col, lineW, shapeName, filled);
         
 	},
 
 	draw: function(ctx){
+		ctx.filled = this.filled;
         ctx.x = this.x;
 		ctx.y = this.y;
 		ctx.strokeStyle = this.col;
@@ -183,19 +202,17 @@ var Square = Shape.extend({
 		ctx.lineTo(this.endx, this.y);
 		ctx.closePath();
 		ctx.stroke();
-		////// FYRIR FYLLTAN KASSA /////
-		// ctx.fillStyle = this.col;
-		// ctx.rect(this.x, this.y, this.endx - this.x, this.endy - this.y);
-		// ctx.closePath();
-		// ctx.fill();
-		////////////////////////////////
+		if(ctx.filled){
+			ctx.fillStyle = this.col;
+			ctx.fill();
+		}	
 	}
 });
 
 //Line Class
 var Line = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName){
-		this.base(x, y, col, lineW, shapeName);
+	constructor: function(x, y, col, lineW, shapeName, filled){
+		this.base(x, y, col, lineW, shapeName, filled);
 	},
 
 	draw: function(ctx){
@@ -213,18 +230,25 @@ var Line = Shape.extend({
 
 //Circle Class
 var Circle = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName){
-		this.base(x, y, col, lineW, shapeName);
+	constructor: function(x, y, col, lineW, shapeName, filled){
+		this.base(x, y, col, lineW, shapeName, filled);
+		this.radius;
 	},
 
 	draw: function(ctx){
+		ctx.filled = this.filled;
         ctx.x = this.x;
 		ctx.y = this.y;
 		ctx.lineWidth = this.lineW;
-		ctx.radius = Math.sqr
-		ctx.strokeStyle = this.col;
 		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.endx + this.endy - this.x - this.y, 0, 2*Math.PI);
-		ctx.stroke();
+		ctx.arc(this.x, this.y, Math.abs(this.endx + this.endy - this.x - this.y), 0, 2*Math.PI);
+	
+		ctx.stroke()
+		ctx.radius = this.radius;
+		ctx.strokeStyle = this.col;	
+		if(ctx.filled){
+			ctx.fillStyle = this.col;
+			ctx.fill();
+		}		
 	}
 });
