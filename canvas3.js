@@ -139,19 +139,19 @@ $('#myCanvas').mouseup(function (e){
 
 function createShapeClass(x, y, col, lw, sh, filled, fo, tex){
 	if(sh === 'brush'){
-		return new Brush(x, y, col, lw, sh, filled, fo, tex);
+		return new Brush(x, y, col, lw, sh, filled);
 	}
 	else if(sh === 'line'){
-		return new Line(x, y, col, lw, sh, filled, fo, tex);
+		return new Line(x, y, col, lw, sh, filled);
 	}
 	else if(sh === 'square'){
-		return new Square(x, y, col, lw, sh, filled, fo, tex);
+		return new Square(x, y, col, lw, sh, filled);
 	}
 	else if(sh === 'circle'){
-		return new Circle(x, y, col, lw, sh, filled, fo, tex);
+		return new Circle(x, y, col, lw, sh, filled);
 	}
 	else if(sh === 'triangle'){
-		return new Triangle(x, y, col, lw, sh, filled, fo, tex);
+		return new Triangle(x, y, col, lw, sh, filled);
 	}
 	else if(sh === 'text'){
 		return new Texti(x, y, col, lw, sh, filled, fo, tex);
@@ -160,7 +160,7 @@ function createShapeClass(x, y, col, lw, sh, filled, fo, tex){
 
 //GRUNNKLASINN
 var Shape = Base.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
+	constructor: function(x, y, col, lineW, shapeName, filled){
 		this.x = x;
 		this.y = y;
         this.endx = x;
@@ -176,7 +176,7 @@ var Shape = Base.extend({
 
 //Brush Class
 var Brush = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
+	constructor: function(x, y, col, lineW, shapeName, filled){
 		this.base(x, y, col, lineW, shapeName, filled);
 		this.hnitx = [];
 		this.hnity = [];
@@ -206,7 +206,7 @@ var Brush = Shape.extend({
 
 //Square Class
 var Square = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
+	constructor: function(x, y, col, lineW, shapeName, filled){
 		this.base(x, y, col, lineW, shapeName, filled);
         
 	},
@@ -233,7 +233,7 @@ var Square = Shape.extend({
 
 //Line Class
 var Line = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
+	constructor: function(x, y, col, lineW, shapeName, filled){
 		this.base(x, y, col, lineW, shapeName, filled);
 	},
 
@@ -252,7 +252,7 @@ var Line = Shape.extend({
 
 //Circle Class
 var Circle = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
+	constructor: function(x, y, col, lineW, shapeName, filled){
 		this.base(x, y, col, lineW, shapeName, filled);
 		this.width;
 		this.height;
