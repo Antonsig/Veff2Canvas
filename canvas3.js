@@ -15,8 +15,7 @@ var mouseX = 0;
 var mouseY = 0;
 var mousedownX = 0;
 var mousedownY = 0;
-//var width;
-//var height;
+var kappa = .5522848; // Fyrir circle
 
 function redraw(){
     context.clearRect(0,0,800,400);
@@ -91,8 +90,6 @@ $('#check').click( function(){
  	else{
  		fyllir = false;
  	}
- 	console.log(fyllir);
-
  });
 
 $('#myCanvas').mousemove(function (e){
@@ -106,6 +103,10 @@ $('#myCanvas').mousemove(function (e){
 			shapeArray[shapeArraylength].hnitx.push(mouseX);
 			shapeArray[shapeArraylength].hnity.push(mouseY);
 		}
+		if(form === 'circle'){
+			shapeArray[shapeArraylength].savecircle();
+		}
+		
 		redraw();
     }
 });	
@@ -179,16 +180,14 @@ var Brush = Shape.extend({
 		this.base(x, y, col, lineW, shapeName, filled);
 		this.hnitx = [];
 		this.hnity = [];
-		this.arraylength = 1;
 		this.hnitx[0] = x;
 		this.hnity[0] = y;
 	},
 
 	draw: function(ctx){
 		ctx.lineWidth = this.lineW;
-
 		ctx.strokeStyle = this.col;
-		ctx.beginPath();
+
 		for(var i = 0; i < this.hnitx.length; i++){
 			this.drawlines(this.hnitx[i], this.hnity[i], this.hnitx[i+1], this.hnity[i+1]);
 			console.log(i + " " + this.hnitx[i]);
@@ -199,7 +198,7 @@ var Brush = Shape.extend({
 		context.beginPath();
 		context.moveTo(fx,fy);
 		context.lineTo(tx,ty);
-		context.closePath();
+		//context.closePath();
 		context.stroke();	
 	}
 	
@@ -255,26 +254,40 @@ var Line = Shape.extend({
 var Circle = Shape.extend({
 	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
 		this.base(x, y, col, lineW, shapeName, filled);
-		this.radius;
+		this.width;
+		this.height;
+		this.ox;	// horizontal offset
+		this.oy;	// vertical offset
+		this.xm;	// x middle
+		this.ym;	// y middle
+		
 	},
 
 	draw: function(ctx){
-
-        ctx.x = this.x;
-		ctx.y = this.y;
 		ctx.lineWidth = this.lineW;
-		ctx.beginPath();
 		ctx.strokeStyle = this.col;		
-		ctx.arc(this.x, this.y, (Math.abs(this.endx + this.endy - this.x - this.y))*0.6, 0, 2*Math.PI);
-	
-		ctx.stroke()
-//		ctx.radius = this.radius;
-
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.ym);
+		ctx.bezierCurveTo(this.x, this.ym - this.oy, this.xm - this.ox, this.y, this.xm, this.y);
+		ctx.bezierCurveTo(this.xm + this.ox, this.y, this.endx, this.ym - this.oy, this.endx, this.ym);
+		ctx.bezierCurveTo(this.endx, this.ym + this.oy, this.xm + this.ox, this.endy, this.xm, this.endy);
+		ctx.bezierCurveTo(this.xm - this.ox, this.endy, this.x, this.ym + this.oy, this.x, this.ym);
+		ctx.closePath();
+		ctx.stroke();
 		ctx.filled = this.filled;
 		if(ctx.filled){
 			ctx.fillStyle = this.col;
 			ctx.fill();
 		}		
+	},
+	
+	savecircle: function(){
+		this.width = this.endx - this.x;
+		this.height = this.endy - this.y;
+		this.ox = (this.width / 2) * kappa;
+		this.oy = (this.height / 2) * kappa;
+		this.xm = this.x + (this.width/2);
+		this.ym = this.y + (this.height/2);
 	}
 });
 
