@@ -233,8 +233,11 @@ var Brush = Shape.extend({
 	},
 
 	draw: function(ctx){
+		ctx.beginPath();
 		ctx.lineWidth = this.lineW;
 		ctx.strokeStyle = this.col;
+		ctx.stroke();
+		ctx.closePath();
 
 		for(var i = 0; i < this.hnitx.length; i++){
 			this.drawlines(this.hnitx[i], this.hnity[i], this.hnitx[i+1], this.hnity[i+1]);
