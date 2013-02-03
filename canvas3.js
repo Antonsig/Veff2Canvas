@@ -253,19 +253,47 @@ var Circle = Shape.extend({
 	},
 
 	draw: function(ctx){
-		ctx.filled = this.filled;
+
         ctx.x = this.x;
 		ctx.y = this.y;
 		ctx.lineWidth = this.lineW;
 		ctx.beginPath();
+		ctx.strokeStyle = this.col;		
 		ctx.arc(this.x, this.y, (Math.abs(this.endx + this.endy - this.x - this.y))*0.6, 0, 2*Math.PI);
 	
 		ctx.stroke()
-		ctx.radius = this.radius;
-		ctx.strokeStyle = this.col;	
+//		ctx.radius = this.radius;
+
+		ctx.filled = this.filled;
 		if(ctx.filled){
 			ctx.fillStyle = this.col;
 			ctx.fill();
 		}		
+	}
+});
+
+//Triangle Class
+var Triangle = Shape.extend({
+	constructor: function(x, y, col, lineW, shapeName, filled){
+		this.base(x, y, col, lineW, shapeName, filled);
+        
+	},
+
+	draw: function(ctx){
+		ctx.filled = this.filled;
+        ctx.x = this.x;
+		ctx.y = this.y;
+		ctx.strokeStyle = this.col;
+		ctx.lineWidth = this.lineW;
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.y);
+		ctx.lineTo(this.endx, this.endy);
+		ctx.lineTo(this.x - (this.endx - this.x), this.endy);
+		ctx.closePath();
+		ctx.stroke();
+		if(ctx.filled){
+			ctx.fillStyle = this.col;
+			ctx.fill();
+		}	
 	}
 });
