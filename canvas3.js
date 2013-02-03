@@ -8,7 +8,9 @@ var undoRedoArreyLength = -1;
 var form = "brush";
 var color = "rgba(0,0,0,1)";
 var fyllir = false;
-var lineWidth = 6;
+var fontur = 'arial';
+var texti = '';
+//var lineWidth = 6;
 var mouseX = 0;
 var mouseY = 0;
 var mousedownX = 0;
@@ -113,8 +115,10 @@ $('#myCanvas').mousedown(function (e){
 	var tempMouse = getMouse(e, canvas);
 	mousedownX = tempMouse.x;
 	mousedownY = tempMouse.y;
-	lineWidth = document.getElementById("linewidth").value;
-	var newShape = createShapeClass(mousedownX, mousedownY, color, lineWidth, form, fyllir);
+	lineWidth = document.getElementById('linewidth').value;
+	fontur = document.getElementById('fontval').value;
+	texti = document.getElementById('textareitur').value;
+	var newShape = createShapeClass(mousedownX, mousedownY, color, lineWidth, form, fyllir, fontur, texti);
     console.log("MX " + mousedownX + "| MY " + mousedownY + "| Color " + color + "| lineWidth " + lineWidth  + "| nameofShape " + form + "| Filled " + fyllir);
     console.log(newShape.shapeName);
 	shapeArray.push(newShape);
@@ -132,30 +136,30 @@ $('#myCanvas').mouseup(function (e){
 	shapeArray[shapeArraylength].draw(context);
 });
 
-function createShapeClass(x, y, col, lw, sh, filled){
+function createShapeClass(x, y, col, lw, sh, filled, fo, tex){
 	if(sh === 'brush'){
-		return new Brush(x, y, col, lw, sh, filled);
+		return new Brush(x, y, col, lw, sh, filled, fo, tex);
 	}
 	else if(sh === 'line'){
-		return new Line(x, y, col, lw, sh, filled);
+		return new Line(x, y, col, lw, sh, filled, fo, tex);
 	}
 	else if(sh === 'square'){
-		return new Square(x, y, col, lw, sh, filled);
+		return new Square(x, y, col, lw, sh, filled, fo, tex);
 	}
 	else if(sh === 'circle'){
-		return new Circle(x, y, col, lw, sh, filled);
+		return new Circle(x, y, col, lw, sh, filled, fo, tex);
 	}
 	else if(sh === 'triangle'){
-		return new Triangle(x, y, col, lw, sh, filled);
+		return new Triangle(x, y, col, lw, sh, filled, fo, tex);
 	}
 	else if(sh === 'text'){
-		return new Text(x, y, col, lw, sh, filled);
+		return new Texti(x, y, col, lw, sh, filled, fo, tex);
 	}
 }
 
 //GRUNNKLASINN
 var Shape = Base.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled){
+	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
 		this.x = x;
 		this.y = y;
         this.endx = x;
@@ -164,12 +168,14 @@ var Shape = Base.extend({
 		this.lineW = lineW;
         this.shapeName = shapeName;
         this.filled = filled;
+        this.fo = fontur;
+        this.tex = texti;
 	},
 });
 
 //Brush Class
 var Brush = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled){
+	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
 		this.base(x, y, col, lineW, shapeName, filled);
 		this.hnitx = [];
 		this.hnity = [];
@@ -201,7 +207,7 @@ var Brush = Shape.extend({
 
 //Square Class
 var Square = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled){
+	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
 		this.base(x, y, col, lineW, shapeName, filled);
         
 	},
@@ -228,7 +234,7 @@ var Square = Shape.extend({
 
 //Line Class
 var Line = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled){
+	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
 		this.base(x, y, col, lineW, shapeName, filled);
 	},
 
@@ -247,7 +253,7 @@ var Line = Shape.extend({
 
 //Circle Class
 var Circle = Shape.extend({
-	constructor: function(x, y, col, lineW, shapeName, filled){
+	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
 		this.base(x, y, col, lineW, shapeName, filled);
 		this.radius;
 	},
@@ -272,6 +278,19 @@ var Circle = Shape.extend({
 	}
 });
 
+//Text Class
+var Texti = Shape.extend({
+	constructor: function(x, y, col, lineW, shapeName, filled, fo, tex){
+		this.base(x, y, col, lineW, shapeName, filled)
+	},
+
+	draw: function(ctx){
+		ctx.fillStyle = this.col;
+  		ctx.font = (this.lineW*5)+ 'px ' + this.fo;
+  		ctx.fillText(this.tex, this.x, this.y);
+	}
+
+});
 //Triangle Class
 var Triangle = Shape.extend({
 	constructor: function(x, y, col, lineW, shapeName, filled){

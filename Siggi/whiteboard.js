@@ -20,7 +20,7 @@ $('#buttonbrush').click( function(){
   tool = 'brush';
 });
 $('#buttonbox').click( function(){
-  tool = 'box';
+  tool = 'texti';
 });
 $('#buttoncircle').click( function(){
   tool = 'circle';
@@ -78,12 +78,16 @@ function freeDrawEnd(xpos,ypos){
   context.lineTo(xpos, ypos);
   context.stroke();
 }
-function drawbox(mousedownX, mousedownY, width, height){
-  context.beginPath();
+function drawbox(){
+  context.fillStyle = '#f00';
+  context.font = 'bold 30px sans-serif';
+  context.fillText('HTML5 is cool!', 50, 100);
+
+  /*context.beginPath();
   context.rect(mousedownX, mousedownY, width, height);
   context.fillStyle = color;
   context.closePath();
-  context.fill();
+  context.fill();*/
 }
 function drawcircle(mousedownX, mousedownY, radius){
   context.beginPath();
@@ -108,6 +112,9 @@ $(document).ready(function(){
 
     if(tool == 'brush'){
       freeDrawStart(mousedownX, mousedownY);
+    }
+    else if(tool == 'texti'){
+      drawbox();
     }
     mouseDown = true;
   });
