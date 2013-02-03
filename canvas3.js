@@ -2,7 +2,7 @@
 // Verkefni í Vefforritun2 HR - HTML5 Canvas  //
 //  Nemendur:
 //   Anton Sigurðsson - antons11@ru.is
-//   Sigurður Nónsson - sigurdurjon11@ru.is
+//   Sigurður Jónsson - sigurdurjon11@ru.is
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
@@ -132,7 +132,7 @@ $('#submit').click(function() {
  img.src = c
  uploadcontext.drawImage(img, 0, 0);
  if(a.value === "") {
-  alert('No image selected, press "Choose File" to select an image!');
+  alert('No image selected, press "Choose File"/"Browse" to select an image!');
  }
 });
 
