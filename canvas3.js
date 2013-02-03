@@ -16,6 +16,7 @@ var mouseY = 0;
 var mousedownX = 0;
 var mousedownY = 0;
 var kappa = .5522848; // Fyrir circle
+var isclean = false;
 
 function redraw(){
     context.clearRect(0,0,800,400);
@@ -27,12 +28,35 @@ function redraw(){
 }
 
 function undo(){
+	if(isclean){
+		var temp = undoRedoArraylength;
+		for(var i = 0; i < temp; i++){
+			redo();
+		}
+		isclean = false;
+	}
+
 	if(shapeArraylength > -1){
 		undoRedoArray[undoRedoArraylength] = shapeArray[shapeArraylength];
 		undoRedoArraylength++;
 		shapeArraylength--;
+		var shapeArray2 = [];
+		for(var i = 0; i < shapeArraylength +1; i++){
+			shapeArray2[i] = shapeArray[i];
+		}
+		shapeArray = shapeArray2;
 		redraw();
 	}
+}
+
+function hreinsa(){
+		var len = shapeArraylength;
+		for (var i = 0; i < len +1; i++){
+			console.log("shapearraylength er " + shapeArraylength);
+			console.log(i);
+			undo();			
+		}
+		isclean = true;
 }
 
 function redo(){
