@@ -30,23 +30,25 @@ function redraw(){
 function undo(){
 	if(isclean){
 		var temp = undoRedoArraylength;
-		for(var i = 0; i < temp; i++){
+		for(var i = 0; i < temp + 1; i++){
 			redo();
 		}
-		isclean = false;
-	}
 
-	if(shapeArraylength > -1){
-		undoRedoArray[undoRedoArraylength] = shapeArray[shapeArraylength];
-		undoRedoArraylength++;
-		shapeArraylength--;
-		var shapeArray2 = [];
-		for(var i = 0; i < shapeArraylength +1; i++){
-			shapeArray2[i] = shapeArray[i];
-		}
-		shapeArray = shapeArray2;
-		redraw();
 	}
+	else{
+		if(shapeArraylength > -1){
+			undoRedoArray[undoRedoArraylength] = shapeArray[shapeArraylength];
+			undoRedoArraylength++;
+			shapeArraylength--;
+			var shapeArray2 = [];
+			for(var i = 0; i < shapeArraylength +1; i++){
+			shapeArray2[i] = shapeArray[i];
+			}
+			shapeArray = shapeArray2;
+			redraw();
+		}
+	}
+	isclean = false;	
 }
 
 function hreinsa(){
