@@ -2,7 +2,9 @@ var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
 var mouseDown = false;
 var shapeArray = [];
+var undoRedoArrey = [];
 var shapeArraylength = -1;
+var undoRedoArreyLength = -1;
 var form = "brush";
 var color = "rgba(0,0,0,1)";
 var fyllir = false;
@@ -62,7 +64,23 @@ function selcol(c){
 function selform(newForm){
 	form = newForm;
 }
-
+$('#buttonsave').click( function(){
+  var thecanvase = document.getElementById('myCanvas');
+  window.open(thecanvase.toDataURL('imge/png'));
+});
+$('#submit').click(function(){
+  var a = document.getElementById('inputbutton'),
+  b = encodeURI(a.value),
+  c = b.replace("C:%5Cfakepath%5C","");
+  var uploadcanvas = document.getElementById('myCanvas');
+  var uploadcontext = uploadcanvas.getContext('2d');
+  var img = new Image()
+  img.src = c
+  uploadcontext.drawImage(img,0,0);
+  if(a.value === ""){
+    alert('No image selected, press "Choose File" to select an image!');
+  }
+});
 
 $('#check').click( function(){
  if(document.getElementById('check').checked){
@@ -112,7 +130,6 @@ $('#myCanvas').mouseup(function (e){
 	shapeArray[shapeArraylength].endx = mouseX;
 	shapeArray[shapeArraylength].endy = mouseY;
 	shapeArray[shapeArraylength].draw(context);
-
 });
 
 function createShapeClass(x, y, col, lw, sh, filled){
@@ -241,7 +258,7 @@ var Circle = Shape.extend({
 		ctx.y = this.y;
 		ctx.lineWidth = this.lineW;
 		ctx.beginPath();
-		ctx.arc(this.x, this.y, Math.abs(this.endx + this.endy - this.x - this.y), 0, 2*Math.PI);
+		ctx.arc(this.x, this.y, (Math.abs(this.endx + this.endy - this.x - this.y))*0.6, 0, 2*Math.PI);
 	
 		ctx.stroke()
 		ctx.radius = this.radius;

@@ -44,7 +44,8 @@ $('#buttonclear').click( function(){
   context.clearRect(0, 0, 800, 700);
 });
 $('#buttonsave').click( function(){
-  canvasToImage();
+  var thecanvase = document.getElementById('myCanvas');
+  window.open(thecanvase.toDataURL('imge/png'));
 });
 $('#submit').click(function(){
   var a = document.getElementById('input'),
@@ -55,6 +56,7 @@ $('#submit').click(function(){
   var img = new Image()
   img.src = c
   uploadcontext.drawImage(img,0,0);
+  alert(c);
   if(a.value == ""){
     alert('No image selected, press "Choose File" to select an image!');
   }
