@@ -5,9 +5,11 @@
 	<title>DrawMate2000</title>
 </HEAD>
 <BODY>
+<div>
 <canvas id="myCanvas" width="800" height="400">
 <p>Your browser doesn't support HTML5. Please upgrade!</p>
 </canvas>
+</div>
 
 <div id="buttons">
 	<ul>
@@ -58,8 +60,8 @@
 <div id="input">
 	<form>
 		<fieldset>
-			<legend>Val</legend>
-				<label>Veldu linu&thorn;ykkt og letur st&aelig;r&eth;</label>
+			<legend>Stillingar</legend>
+				<p><label>Veldu linu&thorn;ykkt og letur st&aelig;r&eth;:</label>
 					<select id="linewidth" default ="5">
 						<option value="1">1</option>
 						<option value="2">2</option>
@@ -82,8 +84,8 @@
 						<option value="32">32</option>
 						<option value="36">36</option>
 						<option value="40">40</option>
-					</select>
-					<label>Veldu leturger&eth;</label>
+					</select></p>
+					<p><label>Veldu leturger&eth;:</label>
 					<select id="fontval" default ="5">
 						<option value="arial">Arial</option>
 						<option value="comic-sans">Comic sans</option>
@@ -91,30 +93,26 @@
 						<option value="garamond">Garamond</option>
 						<option value="sans-serif">Sans serif</option>
 						<option value="tahoma">Tahoma</option>
-					</select>
-					<label>Skr&aacute;&eth;u texta h&eacute;r</label>
-					<input id="textareitur" type"text" name="textareitur"/></br>
-					<label>Fylla hlut</label>
-					<input id="check" type="checkbox" name="Fylla"/></br>
-					<input id="inputbutton" type="file">
+					</select></p>
+					<p><label>Skr&aacute;&eth;u texta h&eacute;r:</label>
+					<input id="textareitur" type"text" name="textareitur"/></p>
+					<p><label>Fylla form:</label>
+						<input id="check" type="checkbox" name="Fylla"/></p>
+					<p id="veldu"><label>Veldu png mynd til a&eth; hla&eth;a inn og smelltu &aacute; <strong>Opna</strong>:</label>
+						<input id="inputbutton" type="file"></p>
 					
 
 
 		</fieldset>
 	</form>
-
-<div>
-
-<div id="nedrihnappar">
+</div>
+<div id="buttons2">
 	<ul>
 		<li>
 			<a id="buttonsave" class="aukaval" href="#" onclick="">Vista</a>
 		</li>
 		<li>
 			<a id="submit" class="aukaval" href="#" onclick="">Opna</a>
-		</li>
-		<li>
-			<a class="aukaval" href="#" onclick="hreinsa()">Hreinsa</a>
 		</li>
 		<li>
 			<a class="aukaval" href="#" onclick="undo()">Undo</a>
@@ -124,11 +122,13 @@
 		</li>
 	</ul>
 </div>
-
-
-
-
-
+<div id="cleanbutton">
+	<ul>
+		<li>
+			<a class="aukaval" href="#" onclick="hreinsa()">Hreinsa allt</a>
+		</li>
+	</ul>
+</div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 	<script src="Base.js"></script>
 	<script type="text/javascript" src="canvas3.js"></script>	
