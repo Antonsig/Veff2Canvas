@@ -2,15 +2,15 @@ var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
 var mouseDown = false;
 var shapeArray = [];
-var undoRedoArrey = [];
+var undoRedoArray = [];
 var shapeArraylength = -1;
-var undoRedoArreyLength = -1;
+var undoRedoArraylength = 0;
 var form = "brush";
 var color = "rgba(0,0,0,1)";
 var fyllir = false;
 var fontur = 'arial';
 var texti = '';
-//var lineWidth = 6;
+var lineWidth = 6;
 var mouseX = 0;
 var mouseY = 0;
 var mousedownX = 0;
@@ -24,6 +24,24 @@ function redraw(){
         shapeArray[i].draw(context);
         console.log(shapeArray[i].x + " " + shapeArray[i].y + " " + shapeArray[i].endx + " " + shapeArray[i].endy + " " + shapeArray[i].lineW + " " + shapeArray[i].col + " " + shapeArray[i].shapeName);
     }
+}
+
+function undo(){
+	if(shapeArraylength > -1){
+		undoRedoArray[undoRedoArraylength] = shapeArray[shapeArraylength];
+		undoRedoArraylength++;
+		shapeArraylength--;
+		redraw();
+	}
+}
+
+function redo(){
+	if(undoRedoArraylength > 0){
+		undoRedoArraylength--;
+		shapeArraylength++;
+		shapeArray[shapeArraylength] = undoRedoArray[undoRedoArraylength];
+		redraw();
+	}
 }
 
 //til að stilla af mús ef padding og border trufla
@@ -65,10 +83,12 @@ function selcol(c){
 function selform(newForm){
 	form = newForm;
 }
+
 $('#buttonsave').click( function(){
   var thecanvase = document.getElementById('myCanvas');
   window.open(thecanvase.toDataURL('imge/png'));
 });
+
 $('#submit').click(function(){
   var a = document.getElementById('inputbutton'),
   b = encodeURI(a.value),
@@ -112,6 +132,10 @@ $('#myCanvas').mousemove(function (e){
 });	
 
 $('#myCanvas').mousedown(function (e){
+	if(undoRedoArraylength > 0){
+		undoRedoArraylength = 0;
+	}
+
 	shapeArraylength++;		
 	var tempMouse = getMouse(e, canvas);
 	mousedownX = tempMouse.x;
@@ -302,13 +326,12 @@ var Texti = Shape.extend({
   		ctx.font = (this.lineW*5)+ 'px ' + this.fo;
   		ctx.fillText(this.tex, this.x, this.y);
 	}
-
 });
+
 //Triangle Class
 var Triangle = Shape.extend({
 	constructor: function(x, y, col, lineW, shapeName, filled){
 		this.base(x, y, col, lineW, shapeName, filled);
-        
 	},
 
 	draw: function(ctx){
